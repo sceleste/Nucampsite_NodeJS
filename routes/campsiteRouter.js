@@ -204,6 +204,7 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
     Campsite.findById(req.params.campsiteId)
     .then(campsite => {
         if (campsite && campsite.comments.id(req.params.commentId)) {
+            if (req.user._id.equals(campsite.comments.id(req.params.commentId).author._id )) {
             campsite.comments.id(req.params.commentId).remove();
             campsite.save()
             .then(campsite => {
@@ -212,6 +213,11 @@ campsiteRouter.route('/:campsiteId/comments/:commentId')
                 res.json(campsite);
             })
             .catch(err => next(err));
+        }else {
+            const err = new Error("You are not authorized to perform this operation.");
+            res.statusCode = 403;
+            return next(err);
+        }
         } else if (!campsite) {
             err = new Error(`Campsite ${req.params.campsiteId} not found`);
             err.status = 404;
