@@ -106,12 +106,12 @@ favoriteRouter.route('/:campsiteId')
         if (favorite) {
             if (favorite.campsites.includes(req.params.campsiteId)) {
             favorite.campsites = favorite.campsites.filter(
-                (campsiteId) => {return campsiteId._id === !req.params.campsiteId}
+                (campsiteId) => {return campsiteId._id == !req.params.campsiteId}
             );
             }
             favorite.save().then(favorite => {
                 res.statusCode = 200;
-                res.setHeader("Content-Type", "application.json");
+                res.setHeader("Content-Type", "application/json");
                 res.json(favorite);
             })
             .catch(err => next(err));        
